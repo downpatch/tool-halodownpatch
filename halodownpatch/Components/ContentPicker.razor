@@ -1,0 +1,47 @@
+
+<section class="gov-section" aria-labelledby="step2-title">
+    <h3 class="gov-heading-m" id="step2-title">3. Choose what to include</h3>
+    <p class="gov-hint" id="sheets-hint">
+        Tick the campaign depots you want to download. If a campaign doesn’t match your base release, the output will say so.
+    </p>
+
+    <fieldset class="gov-fieldset" aria-describedby="sheets-hint">
+        <legend class="gov-visually-hidden">Include content sheets</legend>
+
+        <div class="gov-scrollbox" aria-label="Content sheets">
+            @foreach (var s in IncludedSheets)
+            {
+                if (!BySheet.ContainsKey(s))
+                    continue;
+
+                var id = $"sheet-{s.Replace(" ", "-").ToLowerInvariant()}";
+
+                <div class="gov-choice">
+                    <input id="@id"
+                           class="gov-checkbox"
+                           type="checkbox"
+                           checked="@SelectedSheets.Contains(s)"
+                           @onchange="(e) => OnToggle.InvokeAsync(new SheetToggle(s, (bool)e.Value!))" />
+
+                    <label class="gov-label" for="@id">
+                        <span class="gov-strong">@s</span><br />
+                    </label>
+                </div>
+            }
+        </div>
+    </fieldset>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<string> IncludedSheets { get; set; } = Array.Empty<string>();
+    [Parameter, EditorRequired]
+    public IReadOnlyDictionary<string, List<ManifestRow>> BySheet { get; set; }
+        = new Dictionary<string, List<ManifestRow>>(StringComparer.OrdinalIgnoreCase);
+    [Parameter, EditorRequired]
+    public HashSet<string> SelectedSheets { get; set; }
+        = new(StringComparer.OrdinalIgnoreCase);
+
+    [Parameter, EditorRequired] public EventCallback<SheetToggle> OnToggle { get; set; }
+
+    public readonly record struct SheetToggle(string Sheet, bool Enabled);
+}

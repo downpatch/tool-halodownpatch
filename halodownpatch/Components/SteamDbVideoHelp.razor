@@ -1,0 +1,28 @@
+<section class="" aria-labelledby="video-help-title" open>
+    <h2 class="gov-visually-hidden" id="video-help-title">Help video</h2>
+
+    <details class="gov-details gov-details--compact" open>
+        <summary class="gov-details__summary">
+            Watch: Halo: The Master Chief Collection - How to Downpatch the Steam Version
+
+        </summary>
+
+        <div class="gov-details__text">
+            <p class="gov-body">
+                The tool below is used to generate the depot download commands that the first two minutes of the guide video below references.
+            </p>
+
+            <div class="gov-video" role="group" aria-label="YouTube video player">
+                <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/R988nio61ag?si=vk6OiewXiU7b39oQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+
+        </div>
+    </details>
+</section>
+
+@code {
+    [Parameter] public string VideoId { get; set; } = "R988nio61ag";
+
+    private string EmbedUrl =>
+        $"https://www.youtube-nocookie.com/embed/{VideoId}";
+}

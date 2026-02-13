@@ -1,0 +1,64 @@
+@using System.Text.Encodings.Web
+
+<div class="gov-command-preview halo-panel" role="region" aria-label="Generated commands">
+    @foreach (var line in Lines)
+    {
+        <div class="cmd-line">
+            @((MarkupString)Highlight(line))
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string Commands { get; set; } = "";
+
+    private IEnumerable<string> Lines =>
+        (Commands ?? string.Empty)
+            .Replace("\r\n", "\n")
+            .Split('\n');
+
+    private string Highlight(string line)
+    {
+        if (string.IsNullOrWhiteSpace(line))
+            return "&nbsp;";
+
+        var encoded = HtmlEncoder.Default.Encode(line);
+
+        // Comments
+        if (encoded.TrimStart().StartsWith("#"))
+            return $"<span class='cmd-comment'>{encoded}</span>";
+
+        // Tokenise by spaces (good enough for CLI)
+        var parts = encoded.Split(' ');
+
+        var output = new List<string>();
+
+        for (int i = 0; i < parts.Length; i++)
+        {
+            var p = parts[i];
+
+            if (i == 0)
+            {
+                output.Add($"<span class='cmd-command'>{p}</span>");
+            }
+            else if (p.StartsWith("-") || p.StartsWith("+"))
+            {
+                output.Add($"<span class='cmd-param'>{p}</span>");
+            }
+            else if (p.StartsWith("&lt;") && p.EndsWith("&gt;"))
+            {
+                output.Add($"<span class='cmd-placeholder'>{p}</span>");
+            }
+            else if (int.TryParse(p, out _))
+            {
+                output.Add($"<span class='cmd-value'>{p}</span>");
+            }
+            else
+            {
+                output.Add($"<span class='cmd-value'>{p}</span>");
+            }
+        }
+
+        return string.Join(" ", output);
+    }
+}

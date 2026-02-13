@@ -1,0 +1,63 @@
+<details class="gov-details halo-panel">
+    <summary class="gov-details__summary">DepotDownloader (GitHub): install, login and download</summary>
+    <div class="gov-details__text">
+        <p class="gov-body">
+            DepotDownloader is an open-source CLI for pulling depots from Steam.
+            Official repo (source + releases):
+            <a target="_blank" href="https://github.com/SteamRE/DepotDownloader/releases">https://github.com/SteamRE/DepotDownloader/releases</a>
+        </p>
+
+        <h4 class="gov-heading-m">Install</h4>
+        <ol class="gov-steps">
+            <li class="gov-body">
+                <strong>Get DepotDownloader</strong>:
+                <ul class="gov-list">
+                    <li class="gov-body">Download a prebuilt release from GitHub: <a target="_blank" href="https://github.com/SteamRE/DepotDownloader/releases">https://github.com/SteamRE/DepotDownloader/releases</a></li>
+                    <li class="gov-body">Windows: install via winget (<code>winget install SteamRE.DepotDownloader</code>)</li>
+                </ul>
+            </li>
+            <li class="gov-body">
+                Ensure you have a compatible .NET runtime installed (see the GitHub README).
+            </li>
+            <li class="gov-body">
+                Extract/apply the tool to a permanent folder, e.g. <code>C:\Tools\DepotDownloader</code>.
+            </li>
+        </ol>
+
+        <h4 class="gov-heading-m">Run the generated command</h4>
+        <ol class="gov-steps">
+            <li class="gov-body">Open a terminal in the DepotDownloader folder.</li>
+            <li class="gov-body">
+                Paste the generated command and replace:
+                <ul class="gov-list">
+                    <li class="gov-body"><code>&lt;install-dir&gt;</code> with the desired install folder</li>
+                    <li class="gov-body"><code>&lt;user&gt;</code> and <code>&lt;pass&gt;</code> with your Steam credentials</li>
+                </ul>
+            </li>
+            <li class="gov-body">
+                If Steam Guard prompts occur, complete them as instructed; then rerun the command.
+            </li>
+        </ol>
+
+        <details class="gov-details">
+            <summary class="gov-details__summary">Useful links</summary>
+            <div class="gov-details__text">
+                <ul class="gov-list">
+                    <li class="gov-body"><a target="_blank" href="https://github.com/SteamRE/DepotDownloader">DepotDownloader GitHub home</a></li>
+                    <li class="gov-body"><a target="_blank" href="https://github.com/SteamRE/DepotDownloader/releases">DepotDownloader releases</a></li>
+                </ul>
+            </div>
+        </details>
+
+        <details class="gov-details">
+            <summary class="gov-details__summary">Common issues</summary>
+            <div class="gov-details__text">
+                <ul class="gov-list">
+                    <li class="gov-body">“No manifest available” likely indicates Steam does not provide that manifest for download.</li>
+                    <li class="gov-body">If a depot fails to download, confirm you own the content in Steam.</li>
+                    <li class="gov-body">If output appears stuck, allow time for verification—downloads can pause.</li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</details>

@@ -1,0 +1,40 @@
+
+<section class="gov-section" aria-labelledby="step1-title">
+    <h3 class="gov-heading-m" id="step1-title">2. Pick a base release</h3>
+    <p class="gov-hint" id="base-hint">
+        This is the MCC build you are targeting. The tool uses it to choose the correct manifest IDs for the rest of your selection.
+    </p>
+
+    <fieldset class="gov-fieldset" aria-describedby="base-hint">
+        <legend class="gov-visually-hidden">MCC base release</legend>
+
+        <div class="gov-scrollbox" role="radiogroup" aria-label="MCC base release">
+            @foreach (var r in Releases)
+            {
+                var id = $"base-{r.Slug}";
+                <div class="gov-choice">
+                    <input id="@id"
+                           class="gov-radio"
+                           type="radio"
+                           name="baseRelease"
+                           value="@r.Slug"
+                           checked="@(SelectedSlug == r.Slug)"
+                           @onchange="() => OnSelected.InvokeAsync(r.Slug)" />
+
+                    <label class="gov-label" for="@id">
+                        <span class="gov-strong">@r.Slug</span>
+                        <span class="gov-muted">(@r.ReleaseDateFull)</span>
+                        <br />
+                        <span class="gov-hint">App @r.AppId · Depot @r.DepotId · Manifest @r.ManifestId</span>
+                    </label>
+                </div>
+            }
+        </div>
+    </fieldset>
+</section>
+
+@code {
+    [Parameter, EditorRequired] public IReadOnlyList<ManifestRow> Releases { get; set; } = Array.Empty<ManifestRow>();
+    [Parameter] public string? SelectedSlug { get; set; }
+    [Parameter, EditorRequired] public EventCallback<string> OnSelected { get; set; }
+}

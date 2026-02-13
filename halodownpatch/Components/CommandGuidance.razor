@@ -1,0 +1,23 @@
+﻿
+<div class="gov-section" aria-labelledby="guidance-title">
+    <h5 class="gov-heading-s" id="guidance-title">Setup and usage</h5>
+
+    @switch (Style)
+    {
+        case CommandStyle.DepotDownloaderGitHub:
+            <GuidanceDepotDownloader />
+            break;
+
+        case CommandStyle.SteamCMD:
+            <GuidanceSteamCmd />
+            break;
+
+        case CommandStyle.SteamClientConsole:
+            <GuidanceSteamClientConsole />
+            break;
+    }
+</div>
+
+@code {
+    [Parameter] public CommandStyle Style { get; set; }
+}

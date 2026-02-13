@@ -1,0 +1,26 @@
+
+<section class="gov-section" aria-labelledby="step3-title">
+    <h3 class="gov-heading-m" id="step3-title">1. Select a command style</h3>
+
+    <p class="gov-body">
+        If you are not sure, start with <strong>Steam client console</strong>. It is the simplest to run and avoids passing credentials in a command.
+    </p>
+
+    <fieldset class="gov-fieldset" aria-describedby="style-hint">
+        <legend class="gov-visually-hidden">Command style</legend>
+
+        <label class="gov-label" for="style">Command style</label>
+        <select id="style" class="gov-select" value="@Style" @onchange="OnChanged">
+            <option value="@CommandStyle.SteamClientConsole">Steam client console (Recommended)</option>
+            <option value="@CommandStyle.DepotDownloaderGitHub">DepotDownloader (GitHub)</option>
+            <option value="@CommandStyle.SteamCMD">SteamCMD</option>
+        </select>
+    </fieldset>
+
+    <CommandGuidance Style="Style" />
+</section>
+
+@code {
+    [Parameter] public CommandStyle Style { get; set; } = CommandStyle.SteamClientConsole;
+    [Parameter, EditorRequired] public EventCallback<ChangeEventArgs> OnChanged { get; set; }
+}

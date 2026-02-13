@@ -1,0 +1,53 @@
+<details class="gov-details halo-panel">
+    <summary class="gov-details__summary">SteamCMD: install and download</summary>
+    <div class="gov-details__text">
+        <p class="gov-body">
+            SteamCMD is Valve’s official command-line Steam client. Official documentation:
+            <a target="_blank" href="https://developer.valvesoftware.com/wiki/SteamCMD">https://developer.valvesoftware.com/wiki/SteamCMD</a>
+        </p>
+
+        <h4 class="gov-heading-m">Install</h4>
+        <ol class="gov-steps">
+            <li class="gov-body">
+                Download SteamCMD for your platform from Valve’s wiki and extract it:
+                <a target="_blank" href="https://developer.valvesoftware.com/wiki/SteamCMD">https://developer.valvesoftware.com/wiki/SteamCMD</a>
+            </li>
+            <li class="gov-body">Run SteamCMD once so it self-updates.</li>
+        </ol>
+
+        <h4 class="gov-heading-m">Run the generated command</h4>
+        <ol class="gov-steps">
+            <li class="gov-body">
+                Paste the generated SteamCMD command and replace:
+                <ul class="gov-list">
+                    <li class="gov-body"><code>&lt;install-dir&gt;</code> with the desired install folder</li>
+                    <li class="gov-body"><code>&lt;user&gt;</code> and <code>&lt;pass&gt;</code> with your Steam credentials</li>
+                </ul>
+            </li>
+            <li class="gov-body">Keep the terminal open while the download completes.</li>
+        </ol>
+
+        <details class="gov-details">
+            <summary class="gov-details__summary">Login without embedding credentials</summary>
+            <div class="gov-details__text">
+                <p class="gov-body">
+                    To avoid credentials in logs/history, login interactively:
+                </p>
+                <pre class="gov-pre"><code>steamcmd
+login &lt;user&gt;
+force_install_dir &lt;install-dir&gt;
+download_depot &lt;appid&gt; &lt;depotid&gt; &lt;manifestid&gt;
+quit</code></pre>
+            </div>
+        </details>
+
+        <details class="gov-details">
+            <summary class="gov-details__summary">Useful links</summary>
+            <div class="gov-details__text">
+                <ul class="gov-list">
+                    <li class="gov-body"><a target="_blank" href="https://developer.valvesoftware.com/wiki/SteamCMD">SteamCMD official documentation</a></li>
+                </ul>
+            </div>
+        </details>
+    </div>
+</details>

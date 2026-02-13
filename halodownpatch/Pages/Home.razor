@@ -1,7 +1,259 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+@inject ManifestService ManifestService
+@inject IJSRuntime JS
 
-<h1>Hello, world!</h1>
+<main class="gov-main" id="main-content" tabindex="-1">
+    <header class="gov-page-header">
+        <h1 class="gov-heading-xl">Downpatch Halo MCC with Steam depot downloads</h1>
 
-Welcome to your new app.
+        <p class="gov-body">
+            This page helps you download an older MCC build by generating the exact depot download commands you need.
+            Pick a target release, choose which campaign depots to include, then copy and run the commands.
+        </p>
+
+        <p class="gov-body gov-muted">
+            Data source: Scaless’ manifest spreadsheet
+            (<a href="https://github.com/Scaless/HRDownpatch/blob/main/ManifestDataSource.xlsx" target="_blank" rel="noopener">view on GitHub</a>).
+        </p>
+
+
+        <p class="gov-body gov-muted">
+            Source code: <a href="https://github.com/downpatch/tool-halodownpatch" target="_blank" rel="noopener">view on GitHub</a>.
+        </p>
+    </header>
+
+    <SteamDbVideoHelp VideoId="YOUR_YOUTUBE_ID" />
+
+    @if (_loading)
+    {
+        <p class="gov-body" role="status" aria-live="polite">Loading manifest data…</p>
+    }
+    else if (!string.IsNullOrWhiteSpace(_error))
+    {
+        <div class="gov-error-summary" role="alert" aria-live="assertive">
+            <h2 class="gov-heading-m">There is a problem</h2>
+            <p class="gov-body">@_error</p>
+        </div>
+    }
+    else
+    {
+        <DownpatchIntro />
+
+
+        <section class="gov-section" aria-labelledby="tool-title">
+            <h2 class="gov-heading-l" id="tool-title">Generate your commands</h2>
+            <CommandStylePicker Style="_style"
+                                OnChanged="OnStyleChanged" />
+            <BaseReleasePicker Releases="_mccBase"
+                             SelectedSlug="_selectedBaseSlug"
+                             OnSelected="SelectBase" />
+
+            <ContentPicker IncludedSheets="IncludedSheets"
+                           BySheet="_bySheet"
+                           SelectedSheets="_selectedSheets"
+                           OnToggle="ToggleSheet" />
+
+            
+
+            <section class="gov-section" aria-labelledby="step4-title">
+                <h3 class="gov-heading-m" id="step4-title">4. Copy and run</h3>
+
+                <p class="gov-hint" id="commands-hint">
+                    Copy these commands into the relevant place (Steam client console, SteamCMD, or DepotDownloader).
+                </p>
+
+                <CommandPreview Commands="@_commands" />
+
+                <div class="gov-actions">
+                    <button type="button" class="gov-button" @onclick="CopyCommands">
+                        Copy commands
+                    </button>
+
+                    @if (!string.IsNullOrWhiteSpace(_copyStatus))
+                    {
+                        <span class="gov-body" role="status" aria-live="polite">@_copyStatus</span>
+                    }
+                </div>
+
+            </section>
+        </section>
+    }
+</main>
+
+@code {
+    private bool _loading = true;
+    private string _error = "";
+
+    private List<ManifestRow> _mccBase = new();
+    private Dictionary<string, List<ManifestRow>> _bySheet = new(StringComparer.OrdinalIgnoreCase);
+    private List<string> _availableSheets = new();
+
+    private HashSet<string> _selectedSheets = new(StringComparer.OrdinalIgnoreCase);
+    private string? _selectedBaseSlug;
+
+    private CommandStyle _style = CommandStyle.SteamClientConsole;
+    private string _commands = "";
+
+    private string _copyStatus = "";
+
+    private static readonly string[] IncludedSheets =
+    {
+        "HR Campaign",
+        "H1 Campaign",
+        "H2 Campaign",
+        "H3 Campaign",
+        "H3ODST Campaign",
+        "H4 Campaign",
+    };
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var wb = await ManifestService.LoadWorkbookAsync();
+            _mccBase = wb.MccBase;
+            _bySheet = wb.BySheet;
+            _availableSheets = wb.AvailableSheets;
+
+            _selectedBaseSlug = _mccBase.FirstOrDefault()?.Slug;
+
+            _selectedSheets.Clear();
+            foreach (var s in IncludedSheets)
+            {
+                if (_bySheet.ContainsKey(s))
+                    _selectedSheets.Add(s);
+            }
+
+            RebuildCommands();
+        }
+        catch (Exception ex)
+        {
+            _error = ex.Message;
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void SelectBase(string slug)
+    {
+        _selectedBaseSlug = slug;
+        _copyStatus = "";
+        RebuildCommands();
+    }
+
+    private void ToggleSheet(ContentPicker.SheetToggle toggle)
+{
+    if (toggle.Enabled) _selectedSheets.Add(toggle.Sheet);
+    else _selectedSheets.Remove(toggle.Sheet);
+
+    _copyStatus = "";
+    RebuildCommands();
+}
+
+
+    private void OnStyleChanged(ChangeEventArgs e)
+    {
+        if (e?.Value is null) return;
+
+        if (Enum.TryParse<CommandStyle>(e.Value.ToString(), out var parsed))
+        {
+            _style = parsed;
+            _copyStatus = "";
+            RebuildCommands();
+        }
+    }
+
+    private async Task CopyCommands()
+    {
+        if (string.IsNullOrWhiteSpace(_commands))
+        {
+            _copyStatus = "Nothing to copy.";
+            return;
+        }
+
+        try
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", _commands);
+            _copyStatus = "Copied.";
+        }
+        catch
+        {
+            _copyStatus = "Select and copy with Ctrl+C.";
+        }
+    }
+
+    private void RebuildCommands()
+    {
+        if (string.IsNullOrWhiteSpace(_selectedBaseSlug))
+        {
+            _commands = "";
+            return;
+        }
+
+        var baseRow = _mccBase.FirstOrDefault(r => r.Slug.Equals(_selectedBaseSlug, StringComparison.OrdinalIgnoreCase));
+        if (baseRow is null)
+        {
+            _commands = "";
+            return;
+        }
+
+        var blocks = new List<string>
+        {
+            BuildCommandBlock(baseRow, _style)
+        };
+
+        foreach (var sheet in _selectedSheets.OrderBy(s => s))
+        {
+            if (!_bySheet.TryGetValue(sheet, out var rows))
+                continue;
+
+            var match = ManifestService.FindMatchingRowForBase(baseRow, rows);
+
+            if (match is null)
+            {
+                blocks.Add($"# {sheet}\n# No matching row found for base release: {baseRow.ReleaseDateFull}");
+                continue;
+            }
+
+            blocks.Add(BuildCommandBlock(match, _style));
+        }
+
+        _commands = string.Join("\n\n", blocks);
+    }
+
+    private static string BuildCommandBlock(ManifestRow r, CommandStyle style)
+    {
+        var header = string.IsNullOrWhiteSpace(r.Sheet)
+            ? $"# {r.Slug} ({r.ReleaseDateFull})"
+            : $"# [{r.Sheet}] {r.Slug} ({r.ReleaseDateFull})";
+
+        if (r.AppId == 0 && r.DepotId == 0 && r.ManifestId == 0)
+            return header + "\n# No manifest available for this release.";
+
+        return style switch
+        {
+            CommandStyle.DepotDownloaderGitHub => string.Join("\n", new[]
+            {
+                header,
+                $"dotnet DepotDownloader.dll -app {r.AppId} -depot {r.DepotId} -manifest {r.ManifestId} -username <user> -password <pass> -dir <install-dir>",
+            }),
+
+            CommandStyle.SteamCMD => string.Join("\n", new[]
+            {
+                header,
+                $"steamcmd +force_install_dir <install-dir> +login <user> <pass> +download_depot {r.AppId} {r.DepotId} {r.ManifestId} +quit",
+            }),
+
+            CommandStyle.SteamClientConsole => string.Join("\n", new[]
+            {
+                header,
+                $"download_depot {r.AppId} {r.DepotId} {r.ManifestId}",
+            }),
+
+            _ => header
+        };
+    }
+}

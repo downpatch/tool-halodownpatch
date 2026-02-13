@@ -1,16 +1,56 @@
 ﻿@inherits LayoutComponentBase
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+<a href="#main-content" class="gov-skip-link">
+    Skip to main content
+</a>
+
+<header class="gov-page-header" role="banner">
+    <div class="gov-container gov-header-row">
+        <div>
+            <p class="gov-site-name">
+                <a href="https://downpatch.com" class="gov-site-link">downpatch.com</a>
+            </p>
+
+            <h1 class="gov-heading-xl">
+                How to downpatch Halo: The Master Chief Collection on PC
+            </h1>
+
+            <p class="gov-body gov-muted">
+                Use the command generator below to download the exact depots for the MCC build you want.
+            </p>
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        <a href="https://downpatch.com/guide/halo" class="gov-back-link">
+            Back to guides
+        </a>
+    </div>
+</header>
+
+<main id="main-content" class="gov-container" tabindex="-1">
+    @Body
+</main>
+
+
+<style>
+    .gov-header-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .gov-site-name {
+        margin: 0 0 .25rem 0;
+    }
+
+    .gov-site-link {
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+        .gov-site-link:hover,
+        .gov-site-link:focus {
+            text-decoration: underline;
+        }
+
+</style>
