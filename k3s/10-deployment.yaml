@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: halo-downpatch-web
+  namespace: downpatch-tool-halo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: halo-downpatch-web
+  template:
+    metadata:
+      labels:
+        app: halo-downpatch-web
+    spec:
+      containers:
+        - name: web
+          image: downpatch/downpatch-tool-halodownpatch:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

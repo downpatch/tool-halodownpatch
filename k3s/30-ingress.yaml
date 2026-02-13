@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: halo-downpatch
+  namespace: downpatch-tool-halo
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-http01
+spec:
+  tls:
+    - hosts:
+        - halo.downpatch.com
+      secretName: halo-downpatch-com-tls
+  rules:
+    - host: halo.downpatch.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: halo-downpatch-web
+                port:
+                  number: 80
