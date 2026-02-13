@@ -4,8 +4,36 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>halodownpatch</title>
+    <title>How to downpatch Halo: The Master Chief Collection on PC | Downpatch</title>
+    <meta name="description" content="Downpatch Halo: The Master Chief Collection (MCC) on PC. Generate Steam depot download commands (Steam client console, SteamCMD, DepotDownloader) for specific MCC builds and campaigns." />
+    <meta name="robots" content="index,follow,max-image-preview:large" />
+    <meta name="theme-color" content="#0b0f14" />
+
     <base href="/" />
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://halo.downpatch.com/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Downpatch" />
+    <meta property="og:title" content="How to downpatch Halo: The Master Chief Collection on PC" />
+    <meta property="og:description" content="Generate Steam depot download commands for specific Halo MCC builds and campaign depots." />
+    <meta property="og:url" content="https://halo.downpatch.com/" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="How to downpatch Halo: The Master Chief Collection on PC" />
+    <meta name="twitter:description" content="Generate Steam depot download commands for specific Halo MCC builds and campaign depots." />
+
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" href="favicon-32x32.png" />
+
+    <!-- Optional: hint to crawlers what this page is about -->
+    <meta name="keywords" content="downpatch halo mcc, halo master chief collection downpatch, steam depot download_depot, steam console download_depot, depotdownloader, steamcmd download_depot" />
+
     <link rel="preload" id="webassembly" />
     <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="css/app.css" />
@@ -15,6 +43,26 @@
     <link rel="apple-touch-icon" sizes="512x512" href="icon-512.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="icon-192.png" />
     <script type="importmap"></script>
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "WebSite",
+              "name": "Downpatch",
+              "url": "https://downpatch.com/"
+            },
+            {
+              "@type": "WebPage",
+              "name": "How to downpatch Halo: The Master Chief Collection on PC",
+              "url": "https://halo.downpatch.com/",
+              "description": "Generate Steam depot download commands for specific Halo MCC builds and campaign depots.",
+              "isPartOf": { "@id": "https://downpatch.com/" }
+            }
+          ]
+        }
+    </script>
 </head>
 
 <body>
@@ -33,6 +81,16 @@
     </div>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
     <script>navigator.serviceWorker.register('service-worker.js', { updateViaCache: 'none' });</script>
+
+
+    <script>
+        window.halodpSelectAll = (el) => {
+            try {
+                el.focus();
+                if (el.select) el.select();
+            } catch { }
+        };
+    </script>
 </body>
 
 </html>
